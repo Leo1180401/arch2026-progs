@@ -1,4 +1,4 @@
-# arch2026-progs
+# Bare Metal
 
 Grading framework for [Assignment 2: Complete Applications](https://hackmd.io/@sysprog/2026-arch-homework2).
 Four bare-metal RV32I programs run on [rv32emu](https://github.com/sysprog21/rv32emu) in system emulation, each

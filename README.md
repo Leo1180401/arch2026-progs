@@ -134,13 +134,13 @@ This program implements four arithmetic operations.
 
 Addition is implemented through repeated XOR and carry operations:
 
-\[
+$$
 Sum = a \oplus b
-\]
+$$
 
-\[
+$$
 Carry = (a \land b) \ll 1
-\]
+$$
 
 The process repeats until the carry becomes zero.
 
@@ -148,11 +148,10 @@ The process repeats until the carry becomes zero.
 
 To avoid overflow when calculating the average of two unsigned integers, the following identity is used:
 
-\[
+$$
 \left\lfloor\frac{a+b}{2}\right\rfloor
-=
-(a \land b)+((a\oplus b)\gg1)
-\]
+=(a \land b)+((a\oplus b)\gg1)
+$$
 
 **Q11.20 Fixed-Point Multiplication**
 

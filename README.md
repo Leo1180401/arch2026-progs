@@ -363,15 +363,7 @@ Values greater than 1.00× indicate that assembly is faster than the best C impl
 The most significant improvements were observed in the MiniRubik solver and Q11.20 fixed-point multiplication.
 ---
 
-## 6. References
+## 6. Detailed Technical Report
+For more detailed explanation of the algorithms, implementation, verification methods, and performance measurements, please refer to the technical report.
 
-- [Computer Architecture Assignment 2 — Complete Applications](https://hackmd.io/@sysprog/2026-arch-homework2)
-- [Original Assignment Repository — sysprog21/arch2026-progs](https://github.com/sysprog21/arch2026-progs)
-- [rv32emu — RISC-V Emulator](https://github.com/sysprog21/rv32emu)
-- [RISC-V International](https://riscv.org/)
-
----
-
-**Project:** Computer Architecture HW2 (2026)  
-**University:** National Cheng Kung University  
-**Implementation:** C and RV32I Assembly
+Full Technical Report — [HackMD](https://hackmd.io/J3sw7poFT3SWQQAJ-1lxYg)

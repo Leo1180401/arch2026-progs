@@ -61,12 +61,13 @@ uint32_t op3(uint32_t a, uint32_t b)
 int32_t q_mul(int32_t a, int32_t b)
 {
     /* Step 1: Determine the sign */
-    // (a < 0) & (b < 0), 若"是"則為1,若否,則為0；兩邊(a < 0) != (b < 0)不一樣才會得到1
+    // (a < 0) & (b < 0), 若"是"則為1,若否,則為0；兩邊(a < 0) != (b <
+    // 0)不一樣才會得到1
     int negative = (a < 0) != (b < 0);
 
     /* Step 2: Convert operands to unsigned magnitudes */
-    uint32_t ma = (a < 0) ? 0u - (uint32_t)a : (uint32_t)a;
-    uint32_t mb = (b < 0) ? 0u - (uint32_t)b : (uint32_t)b;
+    uint32_t ma = (a < 0) ? 0u - (uint32_t) a : (uint32_t) a;
+    uint32_t mb = (b < 0) ? 0u - (uint32_t) b : (uint32_t) b;
 
     /* Step 3: Split each operand into high and low 16-bit parts */
     uint32_t al = ma & 0xFFFFu;
@@ -82,20 +83,15 @@ int32_t q_mul(int32_t a, int32_t b)
     uint32_t p3 = ah * bh;
 
     /* Step 5: Combine into a full unsigned 64-bit product */
-    uint64_t magnitude =
-        (uint64_t)p0 +
-        ((uint64_t)p1 << 16) +
-        ((uint64_t)p2 << 16) +
-        ((uint64_t)p3 << 32);
+    uint64_t magnitude = (uint64_t) p0 + ((uint64_t) p1 << 16) +
+                         ((uint64_t) p2 << 16) + ((uint64_t) p3 << 32);
 
     /* Step 6: Restore the sign */
-    int64_t product = negative
-        ? -(int64_t)magnitude
-        :  (int64_t)magnitude;
+    int64_t product = negative ? -(int64_t) magnitude : (int64_t) magnitude;
 
     /* Step 7: Add rounding bias */
-    product += (int64_t)1 << (Q - 1);
+    product += (int64_t) 1 << (Q - 1);
 
     /* Step 8: Arithmetic right shift and retain low 32 bits */
-    return (int32_t)(product >> Q);
+    return (int32_t) (product >> Q);
 }

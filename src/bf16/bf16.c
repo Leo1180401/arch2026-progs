@@ -6,16 +6,15 @@ uint16_t bf16_from_f32(uint32_t f32bits)
 
     // Preserve Infinity and NaN
     if (exponent == 0xFFu)
-        return (uint16_t)(f32bits >> 16);
+        return (uint16_t) (f32bits >> 16);
 
     // Round to nearest, ties to even(RNE)
-    uint32_t rounding_bias =
-        0x7FFFu + ((f32bits >> 16) & 1u);
+    uint32_t rounding_bias = 0x7FFFu + ((f32bits >> 16) & 1u);
 
-    return (uint16_t)((f32bits + rounding_bias) >> 16);
+    return (uint16_t) ((f32bits + rounding_bias) >> 16);
 }
 
- uint16_t bf16_mul(uint16_t a, uint16_t b)
+uint16_t bf16_mul(uint16_t a, uint16_t b)
 {
     /* Step 1: Extract sign, exponent and fraction */
 
@@ -37,7 +36,7 @@ uint16_t bf16_from_f32(uint32_t f32bits)
         if ((b & 0x7FFFu) == 0)
             return 0x7FC0u;
 
-        return (uint16_t)(sign | 0x7F80u);
+        return (uint16_t) (sign | 0x7F80u);
     }
 
     if (exp_b == 0xFFu) {
@@ -47,21 +46,20 @@ uint16_t bf16_from_f32(uint32_t f32bits)
         if ((a & 0x7FFFu) == 0)
             return 0x7FC0u;
 
-        return (uint16_t)(sign | 0x7F80u);
+        return (uint16_t) (sign | 0x7F80u);
     }
 
 
     /* Step 3: Handle zero */
 
-    if ((a & 0x7FFFu) == 0 ||
-        (b & 0x7FFFu) == 0)
-        return (uint16_t)sign;
+    if ((a & 0x7FFFu) == 0 || (b & 0x7FFFu) == 0)
+        return (uint16_t) sign;
 
 
     /* Step 4: Prepare significands and exponents */
     // 若exp_a != 0(true)，則(int32_t)exp_a；若否，則1
-    int32_t ea = exp_a ? (int32_t)exp_a : 1;
-    int32_t eb = exp_b ? (int32_t)exp_b : 1;
+    int32_t ea = exp_a ? (int32_t) exp_a : 1;
+    int32_t eb = exp_b ? (int32_t) exp_b : 1;
 
     uint32_t ma = exp_a ? (0x80u | frac_a) : frac_a;
     uint32_t mb = exp_b ? (0x80u | frac_b) : frac_b;
@@ -106,7 +104,8 @@ uint16_t bf16_from_f32(uint32_t f32bits)
     uint32_t mantissa;
 
     // check if the product exceed 32768(0x8000u)
-    // if yes, do the extra right shift(8) then, and do the addition to the exponent; if not, right shift the product of 7.
+    // if yes, do the extra right shift(8) then, and do the addition to the
+    // exponent; if not, right shift the product of 7.
     if (product & 0x8000u) {
         mantissa = product >> 8;
         exponent++;
@@ -116,22 +115,22 @@ uint16_t bf16_from_f32(uint32_t f32bits)
 
 
     /* Step 9: Handle overflow */
-    //if the exponent bigger than 255(11111111)，the return "Infinity"(0x7F80u = 11111111 0000000),sign is determined by sign bit.
+    // if the exponent bigger than 255(11111111)，the return "Infinity"(0x7F80u
+    // = 11111111 0000000),sign is determined by sign bit.
     if (exponent >= 255)
-        return (uint16_t)(sign | 0x7F80u);
+        return (uint16_t) (sign | 0x7F80u);
 
 
     /* Step 10: Handle underflow / subnormal */
     // If the exponent of O/P <= 0(subnormal)
     if (exponent <= 0) {
-
         if (exponent < -6)
-            return (uint16_t)sign;
+            return (uint16_t) sign;
 
-        uint32_t shift = (uint32_t)(1 - exponent);
+        uint32_t shift = (uint32_t) (1 - exponent);
         uint32_t fraction = (mantissa & 0x7Fu) >> shift;
 
-        return (uint16_t)(sign | fraction);
+        return (uint16_t) (sign | fraction);
     }
 
 
@@ -139,9 +138,7 @@ uint16_t bf16_from_f32(uint32_t f32bits)
 
     uint32_t fraction = mantissa & 0x7Fu;
 
-    return (uint16_t)(sign |
-                      ((uint32_t)exponent << 7) |
-                      fraction);
+    return (uint16_t) (sign | ((uint32_t) exponent << 7) | fraction);
 }
 
 
@@ -157,7 +154,6 @@ uint16_t bf16_sqrt(uint16_t a)
     /* Step 2: Handle NaN and Infinity */
 
     if (exponent == 0xFFu) {
-
         /* Preserve NaN */
         if (fraction != 0)
             return a;
@@ -192,7 +188,7 @@ uint16_t bf16_sqrt(uint16_t a)
     /* Step 6: Prepare significand and unbiased exponent */
     // m = 128 + F
     uint32_t m = 0x80u | fraction;
-    int32_t e = (int32_t)exponent - 127;
+    int32_t e = (int32_t) exponent - 127;
 
 
     /* Step 7: Make exponent even */
@@ -214,7 +210,6 @@ uint16_t bf16_sqrt(uint16_t a)
 
     // 利用 binary search 搜尋 mid
     while (lo <= hi) {
-
         uint32_t mid = (lo + hi) >> 1;
 
         uint32_t square = mid * mid;
@@ -263,6 +258,5 @@ uint16_t bf16_sqrt(uint16_t a)
 
     uint32_t result_frac = best & 0x7Fu;
 
-    return (uint16_t)(((uint32_t)result_exp << 7) |
-                      result_frac);
+    return (uint16_t) (((uint32_t) result_exp << 7) | result_frac);
 }

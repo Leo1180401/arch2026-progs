@@ -33,9 +33,9 @@ The cube is represented using seven movable corner cubies, with each state consi
 
 The number of reachable states in this representation is:
 
-\[
+$$
 7! \times 3^6 = 3,674,160
-\]
+$$
 
 The solver supports nine moves based on the R, B, and D faces.
 

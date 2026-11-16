@@ -26,11 +26,9 @@ op1_asm:
     beqz    a1, op1_done       # if (b == 0), finish
 
 op1_loop:
-    and     t1, a0, a1         # t1 = a & b
-    slli    t1, t1, 1          # carry = (a & b) << 1
-
-    xor     a0, a0, a1         # a = a ^ b
-    mv      a1, t1             # b = carry
+    and     t1, a0, a1         # t1 = old_a & old_b
+    xor     a0, a0, a1         # a = old_a ^ old_b
+    slli    a1, t1, 1          # b = (old_a & old_b) << 1
 
     addi    t0, t0, 1          # count++
 
